@@ -44,6 +44,8 @@ public class FirstOrderControllerScript : MonoBehaviour
     GameObject runCapIFGO;
     Toggle runCapToggle;
 
+    Toggle neighborAnalysisToggle;
+
     public int maxIterations;
     public int maxRuns;
     public int saveImageCount;
@@ -86,6 +88,8 @@ public class FirstOrderControllerScript : MonoBehaviour
 
     public Point editPoint;
 
+    public int testNeighborCount = 0;
+
     private void Awake()
     {
     }
@@ -101,6 +105,7 @@ public class FirstOrderControllerScript : MonoBehaviour
         //storeImages = GameObject.Find("ImageStoreToggle").GetComponent<Toggle>();
         iterationToggle = GameObject.Find("IterationToggle").GetComponent<Toggle>();
         saveCountToggle = GameObject.Find("SaveCountToggle").GetComponent<Toggle>();
+        neighborAnalysisToggle = GameObject.Find("NAToggle").GetComponent<Toggle>();
         saveImageToggle = GameObject.Find("SaveImageToggle").GetComponent<Toggle>();
         runCapToggle = GameObject.Find("RunToggle").GetComponent<Toggle>();
         jsonStorage = GameObject.Find("StorageGO").GetComponent<JSONStorage>();
@@ -233,20 +238,16 @@ public class FirstOrderControllerScript : MonoBehaviour
             preXValue = postXValue;
             postXValue = preXStorage;
         }
-        print("A");
         if (preYValue > postYValue)
         {
             int preYStorage = preYValue;
             preYValue = postYValue;
             postYValue = preYStorage;
         }
-        print("B");
         for (int i = preXValue; i <= postXValue; ++i)
         {
-            print("Hi!");
             for (int j = preYValue; j <= postYValue; ++j)
             {
-                print("Hi again!");
                 myCA.ChangeCell(i, j);
                 print(i + ", " + j);
             }
@@ -266,6 +267,23 @@ public class FirstOrderControllerScript : MonoBehaviour
         if(running == false && editModeOn == false)
         {
 
+        }
+    }
+
+    public void NeighborAnalysis()
+    {
+        myCA.NeighborAnalysis();
+        string newFolder = Application.persistentDataPath + "/CA Image Captures/" + System.DateTime.Now.ToString("yyyy-MM-dd") + "/";
+        Directory.CreateDirectory(newFolder);
+        using (StreamWriter wt = File.AppendText(newFolder + System.DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + " Neighbor Analysis.txt"))
+        {
+            for (int j = 0; j < amountOfCellTypes; ++j)
+            {
+                string cellTypeString = (j + 1).ToString();
+                wt.Write("Cell Type " + cellTypeString + " Hetero Neighbors: " + myCA.neighborCount[j] + " Homo Cells: " + myCA.stateCountReplacement[j] + " Final Ratio: " + myCA.neighborAnalysis[j]);
+                wt.WriteLine();
+            }
+            wt.Close();
         }
     }
 
@@ -526,6 +544,7 @@ public class FirstOrderControllerScript : MonoBehaviour
                 running = false;
                 if (saveImageToggle.isOn) SaveImage();
                 if (saveCountToggle.isOn) SaveIterationCount();
+                if (neighborAnalysisToggle.isOn) NeighborAnalysis();
 
                 if (runCapToggle.isOn)
                 {

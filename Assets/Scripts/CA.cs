@@ -19,9 +19,11 @@ public class CA
     private int numStates;
     SysRand myRand;
     public static List<int> stateCount = new List<int>();
+    public List<int> stateCountReplacement = new List<int>();
+    public List<int> neighborCount = new List<int>();
+    public List<float> neighborAnalysis = new List<float>();
 
     private StatePageInfo statePageInfo;
-
 
     public CA(int width, int height, int numStates, NType type, GridType gType = GridType.Box)
     {
@@ -152,6 +154,43 @@ public class CA
                 grid[x, y] = GetStateFromProbability(probChances);
                 stateCount[currentState] += 1;
             }
+        }
+    }
+
+    public void NeighborAnalysis()
+    {
+        for (int i = 0; i < numStates; ++i)
+        {
+            stateCountReplacement.Add(0);
+            neighborCount.Add(0);
+            neighborAnalysis.Add(0);
+        }
+        for (int x = 0; x < gridWidth; ++x)
+        {
+            for (int y = 0; y < gridHeight; ++y)
+            {
+                int currentState = grid[x, y];
+                List<int> neighborStateCount = GetNeighborCount(x, y);
+                stateCountReplacement[currentState] += 1;
+                for (int i = 0; i < numStates; ++i)
+                {
+                    if (i == currentState)
+                    {
+                        for (int j = 0; j < neighborStateCount.Count(); ++j)
+                        {
+                            if (j == currentState)
+                                continue;
+                            int tempInt = neighborStateCount[j];
+                            int tempInt2 = neighborCount[i];
+                            neighborCount[i] = (tempInt + tempInt2);
+                        }
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < numStates; ++i)
+        {
+            neighborAnalysis[i] = ((float)neighborCount[i] / (8 * stateCountReplacement[i]));
         }
     }
 
