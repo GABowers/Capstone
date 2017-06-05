@@ -1,11 +1,13 @@
+Add "Advanced Analysis" dialog box, include Dan's Neighbor Analysis
+
 Add dialog for if load fails, or when load successful
 
 pull CA behind buttons/text, but in front of panel, so that 4:3 monitors work with buttons/text
 
 Make "2nd order" CA
 
-Add "save as" for save functions DONE
-
 Change EvN neighborhood to "hybrid," add real evN and eM.
 
 IMPORTANT BUG Apply Number twice ruins things (places probability input fields too low) -- have a dialog pop up asking if you really want to reset the grid after initialization? ???
+
+DONE Add "save as" for save functions

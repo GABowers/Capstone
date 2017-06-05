@@ -9,6 +9,11 @@ public class FirstOrderControllerScript : MonoBehaviour
 {
     JSONStorage jsonStorage;
     SaveLoad saveLoad;
+    CA myCA;
+    List<StatePageInfo> statePageInfoStuff;
+    private MainPageInfo mainPageInfo;
+    public FirstController otherController;
+
     int amountOfCellTypes;
     public int gridWidth;
     public int gridHeight;
@@ -61,10 +66,7 @@ public class FirstOrderControllerScript : MonoBehaviour
     int numberCellsOfType;
     public List<int> numberCellsPerType;
 
-    CA myCA;
-    List<StatePageInfo> statePageInfoStuff;
-    private MainPageInfo mainPageInfo;
-    public FirstController otherController;
+    
     
     Texture2D tex;
     Sprite board;
@@ -76,7 +78,7 @@ public class FirstOrderControllerScript : MonoBehaviour
     public Text runText;
     //public List<float> probabilities;
 
-    bool alreadyCA;
+    public bool alreadyCA;
     public bool running;
     public bool continueCA = false;
     bool saveOpen = false;
@@ -262,11 +264,11 @@ public class FirstOrderControllerScript : MonoBehaviour
         pauseButtonText.text = continueCA ? "UnPaused" : "Paused";
     }
 
-    public void EditProbs()
+    public void EditSettings()
     {
         if(running == false && editModeOn == false)
         {
-
+            otherController.CAEditSettings();
         }
     }
 
@@ -399,6 +401,25 @@ public class FirstOrderControllerScript : MonoBehaviour
         }
 
         myCA.InitializeGrid(ratios);
+    }
+
+    public void ResumeCA()
+    {
+        statePageInfoStuff = otherController.statePageInfo;
+        editModeOn = false;
+        for (int h = 0; h < statePageInfoStuff.Count; ++h)
+        {
+            for (int i = 0; i < statePageInfoStuff[h].probs.GetLength(0); ++i)
+            {
+                for (int j = 0; j < (statePageInfoStuff[h].probs.GetLength(1)); ++j)
+                {
+                    for (int k = 0; k < statePageInfoStuff[h].probs.GetLength(2); ++k)
+                    {
+                        myCA.SetStateInfo(h, i, j, k, statePageInfoStuff[h].probs[i, j, k].Value);
+                    }
+                }
+            }
+        }
     }
 
     public void StartCA()

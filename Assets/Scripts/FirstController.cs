@@ -79,15 +79,32 @@ public class FirstController : MonoBehaviour {
         // If we are at the last state start the CA
         if (state == mainPageInfo.numStates)
         {
-            // All the code to set up the CA fo here
-            // and the variables to tell Update to start iterating
-            cellPageCanvas.gameObject.SetActive(false);
-            caPageCanvas.gameObject.SetActive(true);
-            runCA.CreateCA(mainPageInfo);
+            if (runCA.alreadyCA == false)
+            {
+                // All the code to set up the CA fo here
+                // and the variables to tell Update to start iterating
+                cellPageCanvas.gameObject.SetActive(false);
+                caPageCanvas.gameObject.SetActive(true);
+                runCA.CreateCA(mainPageInfo);
+            }
+            if(runCA.alreadyCA == true)
+            {
+                cellPageCanvas.gameObject.SetActive(false);
+                caPageCanvas.gameObject.SetActive(true);
+                runCA.ResumeCA();
+            }
         }
 
         else
             cellPageController.SetInfo(statePageInfo[state]); // Our state is +1 from our index.
+    }
+
+    public void CAEditSettings()
+    {
+        caPageCanvas.gameObject.SetActive(false);
+        CheckSavedState();
+        cellPageCanvas.gameObject.SetActive(true);
+        cellPageController.SetInfo(statePageInfo[0]);
     }
 
     public void CAtoMain()
