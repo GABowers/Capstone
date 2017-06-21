@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cellular Automata.Plugins", "Cellular Automata.Plugins.csproj", "{A01D0622-9FD1-BD42-8DAD-C781A5091497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cellular Automata", "Cellular Automata.csproj", "{310BB8DF-6371-2F7A-6446-7A4B0DDEB694}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A01D0622-9FD1-BD42-8DAD-C781A5091497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01D0622-9FD1-BD42-8DAD-C781A5091497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01D0622-9FD1-BD42-8DAD-C781A5091497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01D0622-9FD1-BD42-8DAD-C781A5091497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310BB8DF-6371-2F7A-6446-7A4B0DDEB694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310BB8DF-6371-2F7A-6446-7A4B0DDEB694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310BB8DF-6371-2F7A-6446-7A4B0DDEB694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310BB8DF-6371-2F7A-6446-7A4B0DDEB694}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
