@@ -1,6 +1,10 @@
+Add some type of "highlight" for when clicking and dragging cells
+
 Add "Advanced Analysis" dialog box, include Dan's Neighbor Analysis
 
 Add dialog for if load fails, or when load successful
+
+Add grid configuration save/load
 
 pull CA behind buttons/text, but in front of panel, so that 4:3 monitors work with buttons/text
 
