@@ -13,6 +13,7 @@ public class FirstOrderControllerScript : MonoBehaviour
     List<StatePageInfo> statePageInfoStuff;
     private MainPageInfo mainPageInfo;
     public FirstController otherController;
+    BlankGrid[,] grid;
 
     int amountOfCellTypes;
     public int gridWidth;
@@ -161,10 +162,10 @@ public class FirstOrderControllerScript : MonoBehaviour
             MakeEditDown();
         }
 
-        if ((Input.GetMouseButtonUp(0)) && (saveOpen == false) && (editModeOn == true))
-        {
-            MakeEditUp();
-        }
+        //if ((Input.GetMouseButtonUp(0)) && (saveOpen == false) && (editModeOn == true))
+        //{
+        //    MakeEditUp();
+        //}
 
         if (Input.GetKeyUp(KeyCode.Space) && (editModeOn == true))
         {
@@ -225,38 +226,38 @@ public class FirstOrderControllerScript : MonoBehaviour
         preYValue = (int)((((Input.mousePosition.y - difHeight) / gridHeight) / (sr.transform.localScale.y)) * gridHeight);
     }
 
-    public void MakeEditUp()
-    {
-        float tempX = (((Input.mousePosition.x - difWidth) / gridWidth) / (sr.transform.localScale.x)) * gridWidth;
-        float tempY = (((Input.mousePosition.y - difHeight) / gridHeight) / (sr.transform.localScale.y)) * gridHeight;
+    //public void MakeEditUp()
+    //{
+    //    float tempX = (((Input.mousePosition.x - difWidth) / gridWidth) / (sr.transform.localScale.x)) * gridWidth;
+    //    float tempY = (((Input.mousePosition.y - difHeight) / gridHeight) / (sr.transform.localScale.y)) * gridHeight;
 
-        if (tempX < 0 || tempY < 0)
-            return;
-        postXValue = (int)((((Input.mousePosition.x - difWidth) / gridWidth) / (sr.transform.localScale.x)) * gridWidth);
-        postYValue = (int)((((Input.mousePosition.y - difHeight) / gridHeight) / (sr.transform.localScale.y)) * gridHeight);
-        if (preXValue > postXValue)
-        {
-            int preXStorage = preXValue;
-            preXValue = postXValue;
-            postXValue = preXStorage;
-        }
-        if (preYValue > postYValue)
-        {
-            int preYStorage = preYValue;
-            preYValue = postYValue;
-            postYValue = preYStorage;
-        }
-        for (int i = preXValue; i <= postXValue; ++i)
-        {
-            for (int j = preYValue; j <= postYValue; ++j)
-            {
-                myCA.ChangeCell(i, j);
-                print(i + ", " + j);
-            }
-        }
-        print("C");
-        UpdateBoard();
-    }
+    //    if (tempX < 0 || tempY < 0)
+    //        return;
+    //    postXValue = (int)((((Input.mousePosition.x - difWidth) / gridWidth) / (sr.transform.localScale.x)) * gridWidth);
+    //    postYValue = (int)((((Input.mousePosition.y - difHeight) / gridHeight) / (sr.transform.localScale.y)) * gridHeight);
+    //    if (preXValue > postXValue)
+    //    {
+    //        int preXStorage = preXValue;
+    //        preXValue = postXValue;
+    //        postXValue = preXStorage;
+    //    }
+    //    if (preYValue > postYValue)
+    //    {
+    //        int preYStorage = preYValue;
+    //        preYValue = postYValue;
+    //        postYValue = preYStorage;
+    //    }
+    //    for (int i = preXValue; i <= postXValue; ++i)
+    //    {
+    //        for (int j = preYValue; j <= postYValue; ++j)
+    //        {
+    //            myCA.ChangeCell(i, j);
+    //            print(i + ", " + j);
+    //        }
+    //    }
+    //    print("C");
+    //    UpdateBoard();
+    //}
 
     public void PauseButton()
     {
@@ -372,6 +373,37 @@ public class FirstOrderControllerScript : MonoBehaviour
         saveLoad.Save();
     }
 
+    public void OriginalCreateCA(MainPageInfo info)
+    {
+        editModeOn = false;
+        mainPageInfo = info;
+        statePageInfoStuff = otherController.statePageInfo;
+        amountOfCellTypes = mainPageInfo.numStates.Value;
+        nType = mainPageInfo.nType;
+        gridWidth = mainPageInfo.gridWidth.Value;
+        gridHeight = mainPageInfo.gridHeight.Value;
+        gType = mainPageInfo.gridType;
+        myCA = new CA(gridWidth, gridHeight, amountOfCellTypes, nType, gType);
+
+        for (int h = 0; h < statePageInfoStuff.Count; ++h)
+        {
+            ratios.Add(statePageInfoStuff[h].startingAmount.Value);
+            colors.Add(statePageInfoStuff[h].color);
+            for (int i = 0; i < statePageInfoStuff[h].probs.GetLength(0); ++i)
+            {
+                for (int j = 0; j < (statePageInfoStuff[h].probs.GetLength(1)); ++j)
+                {
+                    for (int k = 0; k < statePageInfoStuff[h].probs.GetLength(2); ++k)
+                    {
+                        myCA.SetStateInfo(h, i, j, k, statePageInfoStuff[h].probs[i, j, k].Value);
+                    }
+                }
+            }
+        }
+
+        myCA.InitializeGrid(ratios);
+    }
+
     public void CreateCA(MainPageInfo info)
     {
         editModeOn = false;
@@ -401,6 +433,7 @@ public class FirstOrderControllerScript : MonoBehaviour
         }
 
         myCA.InitializeGrid(ratios);
+        grid = myCA.grid;
     }
 
     public void ResumeCA()
@@ -451,8 +484,16 @@ public class FirstOrderControllerScript : MonoBehaviour
         {
             for (int j = 0; j < gridHeight; ++j)
             {
-                tileColor = dict[colors[myCA.GetCellState(i, j)]];
-                tex.SetPixel(i, j, tileColor);
+                if (grid[i, j].containsAgent == true && (System.Object.ReferenceEquals(grid[i, j].agent, null) == false))
+                {
+                    tileColor = dict[colors[myCA.GetCellState(i, j)]];
+                    tex.SetPixel(i, j, tileColor);
+                }
+                else
+                {
+                    tileColor = Color.black;
+                    tex.SetPixel(i, j, tileColor);
+                }
             }
         }
         tex.Apply();
